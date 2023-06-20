@@ -8,8 +8,8 @@ ARG KUBE_VERSION=v1.16.2
 ARG CEPH_RELEASE=pacific
 ARG CEPH_RELEASE_TAG=16.2.10-1bionic
 
-ARG CEPH_REPO=https://mirror.mirantis.com/acicd/ceph-pacific/
-ARG CEPH_KEY=https://mirror.mirantis.com/acicd/ceph-pacific/release.asc
+ARG CEPH_REPO=https://download.ceph.com/debian-16.2.10/
+ARG CEPH_KEY=https://download.ceph.com/keys/release.asc
 
 ADD ${CEPH_KEY} /etc/apt/ceph-${CEPH_RELEASE}.key
 RUN set -ex ;\
@@ -35,7 +35,8 @@ RUN set -ex ;\
         jq ;\
     curl -sSL https://bootstrap.pypa.io/pip/3.6/get-pip.py | python3 ;\
     pip3 --no-cache-dir install --upgrade --ignore-installed PyYAML ;\
-    pip3 --no-cache-dir install --upgrade \
+    pip3 --no-cache-dir install --only-binary :all: pandas;\
+    pip3 --no-cache-dir install --upgrade --only-binary \
       crush \
       rgwadmin \
       six \
@@ -43,7 +44,7 @@ RUN set -ex ;\
       cryptography==37.0.4 \
       python-openstackclient \
       python-swiftclient ;\
-    curl -sSL https://dl.k8s.io/${KUBE_VERSION}/kubernetes-client-linux-amd64.tar.gz | tar -zxv --strip-components=1 ;\
+    curl -sSL https://dl.k8s.io/${KUBE_VERSION}/kubernetes-client-linux-arm64.tar.gz | tar -zxv --strip-components=1 ;\
     mv ${TMP_DIR}/client/bin/kubectl /usr/bin/kubectl ;\
     chmod +x /usr/bin/kubectl ;\
     rm -rf ${TMP_DIR} ;\
