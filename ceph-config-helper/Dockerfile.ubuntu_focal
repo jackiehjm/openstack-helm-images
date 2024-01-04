@@ -4,11 +4,11 @@ FROM ${FROM}
 ARG DISTRO_CODENAME='focal'
 
 ARG KUBE_VERSION=v1.16.2
-ARG CEPH_RELEASE
-ARG CEPH_RELEASE_TAG
+ARG CEPH_RELEASE=quincy
+ARG CEPH_RELEASE_TAG=17.2.6-1focal
 
-ARG CEPH_REPO
-ARG CEPH_KEY
+ARG CEPH_REPO=https://download.ceph.com/debian-17.2.6/
+ARG CEPH_KEY=https://download.ceph.com/keys/release.asc
 
 ADD ${CEPH_KEY} /etc/apt/ceph-${CEPH_RELEASE}.key
 RUN set -ex ;\
@@ -37,7 +37,7 @@ RUN set -ex ;\
         jq ;\
     pip3 --no-cache-dir install --upgrade \
       rgwadmin ;\
-    curl -sSL https://dl.k8s.io/${KUBE_VERSION}/kubernetes-client-linux-amd64.tar.gz | tar -zxv --strip-components=1 ;\
+    curl -sSL https://dl.k8s.io/${KUBE_VERSION}/kubernetes-client-linux-arm64.tar.gz | tar -zxv --strip-components=1 ;\
     mv ${TMP_DIR}/client/bin/kubectl /usr/bin/kubectl ;\
     chmod +x /usr/bin/kubectl ;\
     rm -rf ${TMP_DIR} ;\
